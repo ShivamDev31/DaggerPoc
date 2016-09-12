@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+def config = rootProject.ext.config;
+def libs = rootProject.ext.libs;
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+    defaultConfig {
+        applicationId config.packageName
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Testing stuff
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2')
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile "com.android.support:support-annotations:${libs.annotations}"
+
+    // Google stuff
+    compile "com.android.support:support-annotations:${libs.annotations}"
+    compile "com.android.support:appcompat-v7:${libs.support}"
+
+    // Retrofit stuff
+    compile "com.squareup.retrofit2:retrofit:${libs.retrofit}"
+    compile "com.squareup.retrofit2:converter-gson:${libs.retrofitGsonConverter}"
+    compile "com.squareup.okhttp3:okhttp:${libs.okHttp}"
+    compile "com.squareup.okhttp3:logging-interceptor:${libs.okHttp}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${libs.rxRetrofitAdapter}"
+
+    // RxJava stuff
+    compile "io.reactivex:rxjava:${libs.rxJava}"
+    compile "io.reactivex:rxandroid:${libs.rxAndroid}"
+    compile "com.hwangjr.rxbus:rxbus:${libs.rxBus}"
+    compile "com.tbruyelle.rxpermissions:rxpermissions:${libs.rxPermissions}@aar"
+    compile "com.trello:rxlifecycle:${libs.rxLifecycle}"
+    compile "com.trello:rxlifecycle-android:${libs.rxLifecycle}"
+    compile "com.trello:rxlifecycle-components:${libs.rxLifecycle}"
+    compile "com.jakewharton.rxbinding:rxbinding:${libs.rxBinding}"
+
+    // Dagger stuff
+    apt "com.google.dagger:dagger-compiler:${libs.dagger}"
+    compile "com.google.dagger:dagger:${libs.dagger}"
+    provided "javax.annotation:jsr250-api:1.0"
+
+    compile "com.jakewharton:butterknife:${libs.butterKnife}"
+    apt "com.jakewharton:butterknife-compiler:${libs.butterKnife}"
+
+}
+
+//apply plugin: 'com.google.gms.google-services'
