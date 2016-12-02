@@ -1,4 +1,4 @@
-package com.shivamdev.daggerpoc;
+package com.shivamdev.daggerpoc.features.git.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shivamdev.daggerpoc.R;
 import com.shivamdev.daggerpoc.commons.DaggerApplication;
 import com.shivamdev.daggerpoc.network.api.GitHubApi;
 import com.shivamdev.daggerpoc.network.data.GitData;
