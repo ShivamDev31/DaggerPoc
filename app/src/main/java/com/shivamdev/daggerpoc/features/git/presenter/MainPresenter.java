@@ -1,8 +1,5 @@
 package com.shivamdev.daggerpoc.features.git.presenter;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.shivamdev.daggerpoc.R;
 import com.shivamdev.daggerpoc.commons.mvp.Presenter;
 import com.shivamdev.daggerpoc.features.git.contract.MainScreen;
@@ -38,10 +35,6 @@ public class MainPresenter extends Presenter {
     }
 
     public void loadGitData(String name) {
-        if (TextUtils.isEmpty(name)) {
-            screen.showToast(R.string.error_enter_name);
-            return;
-        }
         screen.showLoader(R.string.loading);
         Subscription subs = gitHubApi.getUserRepos(name)
                 .subscribeOn(Schedulers.io())
@@ -54,7 +47,6 @@ public class MainPresenter extends Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: " + e);
                         screen.hideLoader();
                         screen.showError();
                     }

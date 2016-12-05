@@ -1,6 +1,7 @@
 package com.shivamdev.daggerpoc.features.git.view;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,10 @@ public class MainActivity extends BaseActivity implements MainScreen {
     @OnClick(R.id.b_submit)
     void submitClick() {
         String name = etName.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            showToast(R.string.error_enter_name);
+            return;
+        }
         presenter.loadGitData(name);
     }
 
