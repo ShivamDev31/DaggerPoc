@@ -1,6 +1,6 @@
 package com.shivamdev.daggerpoc.di;
 
-import com.shivamdev.daggerpoc.network.api.GitHubApi;
+import com.shivamdev.daggerpoc.features.git.view.MainActivity;
 
 import javax.inject.Singleton;
 
@@ -14,5 +14,6 @@ import dagger.Component;
 @Component(modules = {NetworkModule.class})
 public interface AppComponent {
 
-    GitHubApi getGitApi();
+    void inject(MainActivity activity);
+
 }

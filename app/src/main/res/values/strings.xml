@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DaggerPoc</string>
+    <string name="error_enter_name">Please enter the name.</string>
+    <string name="loading">Loading...</string>
+    <string name="submit">Submit</string>
+    <string name="load_data_here">Load data here</string>
+    <string name="error_loading_git_data">Error while loading git data</string>
 </resources>

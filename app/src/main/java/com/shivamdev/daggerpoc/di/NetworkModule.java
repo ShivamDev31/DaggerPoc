@@ -1,7 +1,6 @@
 package com.shivamdev.daggerpoc.di;
 
 import com.shivamdev.daggerpoc.network.RetrofitAdapter;
-import com.shivamdev.daggerpoc.network.api.GitApi;
 import com.shivamdev.daggerpoc.network.api.GitHubApi;
 
 import javax.inject.Singleton;
@@ -17,12 +16,12 @@ import dagger.Provides;
 public class NetworkModule {
 
     @Provides @Singleton
-    public GitHubApi provideGitHubApi() {
-        return RetrofitAdapter.getInstance().get().create(GitHubApi.class);
+    RetrofitAdapter provideRetrofitAdapter() {
+        return RetrofitAdapter.getInstance();
     }
 
     @Provides @Singleton
-    public GitApi provideGitApi() {
-        return RetrofitAdapter.getInstance().get().create(GitApi.class);
+    GitHubApi provideGitHubApi(RetrofitAdapter adapter) {
+        return adapter.get().create(GitHubApi.class);
     }
 }

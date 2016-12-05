@@ -1,80 +1,83 @@
 package com.shivamdev.daggerpoc.features.git.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shivamdev.daggerpoc.R;
-import com.shivamdev.daggerpoc.commons.DaggerApplication;
-import com.shivamdev.daggerpoc.network.api.GitHubApi;
+import com.shivamdev.daggerpoc.commons.BaseActivity;
+import com.shivamdev.daggerpoc.di.DaggerInjection;
+import com.shivamdev.daggerpoc.features.git.contract.MainScreen;
+import com.shivamdev.daggerpoc.features.git.presenter.MainPresenter;
 import com.shivamdev.daggerpoc.network.data.GitData;
 
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.OnClick;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private CompositeSubscription compositeSubscription;
+public class MainActivity extends BaseActivity implements MainScreen {
+
+    @BindView(R.id.et_name)
+    EditText etName;
+    @BindView(R.id.tv_text)
+    TextView tvText;
+
+    @Inject
+    MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        compositeSubscription = new CompositeSubscription();
+        DaggerInjection.getInstance().component().inject(this);
+        presenter.initView(this);
+    }
 
-        final EditText etName = (EditText) findViewById(R.id.et_name);
-        final TextView tvText = (TextView) findViewById(R.id.tv_text);
-        final Button bSubmit = (Button) findViewById(R.id.b_submit);
+    @Override
+    public int getLayout() {
+        return R.layout.activity_main;
+    }
 
-        bSubmit.setOnClickListener(v -> {
-            String name = etName.getText().toString();
-            if (TextUtils.isEmpty(name)) {
-                Toast.makeText(MainActivity.this, "Please enter the name.", Toast.LENGTH_LONG).show();
-                return;
-            }
+    @OnClick(R.id.b_submit)
+    void submitClick() {
+        String name = etName.getText().toString();
+        presenter.loadGitData(name);
+    }
 
-            GitHubApi gitHubApi = DaggerApplication.getInstance().component().getGitApi();
-            Subscription subs = gitHubApi.getUserRepos(name)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<List<GitData>>() {
-                        @Override
-                        public void onCompleted() {
+    @Override
+    public void showLoader(int message) {
+        showProgressDialog(getString(message));
+    }
 
-                        }
+    @Override
+    public void hideLoader() {
+        hideProgressDialog();
+    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d(TAG, "onError: " + e);
-                        }
+    @Override
+    public void updateGitData(List<GitData> gitDatas) {
+        tvText.setText("");
+        for (GitData data : gitDatas) {
+            tvText.append(data.toString());
+        }
+    }
 
-                        @Override
-                        public void onNext(List<GitData> gitDatas) {
-                            tvText.setText("");
-                            for (GitData data : gitDatas) {
-                                tvText.append(data.toString());
-                            }
-                        }
-                    });
+    @Override
+    public void showToast(int message) {
+        Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show();
+    }
 
-            compositeSubscription.add(subs);
-        });
+    @Override
+    public void showError() {
+        tvText.setText(R.string.error_loading_git_data);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        compositeSubscription.clear();
+        presenter.destroyView();
     }
 }
