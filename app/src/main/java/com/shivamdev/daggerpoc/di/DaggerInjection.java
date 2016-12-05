@@ -5,23 +5,9 @@ package com.shivamdev.daggerpoc.di;
  */
 
 public final class DaggerInjection {
+    private static final AppComponent component = DaggerAppComponent.builder().build();
 
-    private static DaggerInjection injection;
-    private AppComponent component;
-
-    private DaggerInjection() {
-        component = DaggerAppComponent.builder().build();
-    }
-
-    public static DaggerInjection getInstance() {
-        if (injection == null) {
-            injection = new DaggerInjection();
-        }
-        return injection;
-    }
-
-    public AppComponent component() {
+    public static AppComponent get() {
         return component;
     }
-
 }

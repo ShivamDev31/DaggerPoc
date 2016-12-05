@@ -15,7 +15,7 @@ import dagger.Provides;
 @Module
 public class NetworkModule {
 
-    @Provides @Singleton
+    @Provides
     RetrofitAdapter provideRetrofitAdapter() {
         return RetrofitAdapter.getInstance();
     }

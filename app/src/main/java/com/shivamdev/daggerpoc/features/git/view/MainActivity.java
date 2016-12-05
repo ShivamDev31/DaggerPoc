@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity implements MainScreen {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerInjection.getInstance().component().inject(this);
+        DaggerInjection.get().inject(this);
         presenter.initView(this);
     }
 
